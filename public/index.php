@@ -35,20 +35,20 @@ include("library/utils.php");
 Settings::setMode("build");
 
 try {
-	include("library/boot.php");
-	include("library/load_apps.php");
-	
+    include("library/boot.php");
+    include("library/load_apps.php");
+
     date_default_timezone_set(Settings::getValue("site", "timezone"));
 
-	$request = JaossRequest::getInstance();
-	$request->dispatch();
+    $request = JaossRequest::getInstance();
+    $request->dispatch();
     $response = $request->getResponse();
 
     $response->echoHeaders();
     $response->echoBody();
 } catch (CoreException $e) {
-	$handler = new ErrorHandler();
-	exit($handler->handleError($e));
+    $handler = new ErrorHandler();
+    exit($handler->handleError($e));
 } catch (Exception $e) {
-	exit($e->getMessage());
+    exit($e->getMessage());
 }
