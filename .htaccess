@@ -1,4 +1,0 @@
-php_flag magic_quotes_gpc Off
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule .* index.php [L]
