@@ -31,10 +31,10 @@ include("library/app_manager.php");
 include("library/session.php");
 include("library/utils.php");
 
-//@todo we need to auto-detect which settings to load
-Settings::setMode("build");
+$mode = getenv("PROJECT_MODE") !== false ? getenv("PROJECT_MODE") : "build";
 
 try {
+    Settings::setMode($mode);
     include("library/boot.php");
     include("library/load_apps.php");
 
