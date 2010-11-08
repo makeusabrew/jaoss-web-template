@@ -31,7 +31,7 @@ include("library/app_manager.php");
 include("library/session.php");
 include("library/utils.php");
 
-$mode = getenv("PROJECT_MODE") !== false ? getenv("PROJECT_MODE") : "build";
+$mode = getenv("PROJECT_MODE") !== false ? getenv("PROJECT_MODE") : "live";
 
 try {
     Settings::setMode($mode);
