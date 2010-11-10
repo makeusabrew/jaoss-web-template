@@ -1,6 +1,7 @@
 <?php
 define("PROJECT_ROOT", realpath(dirname(__FILE__)."/../")."/");
 set_include_path(get_include_path() . PATH_SEPARATOR . PROJECT_ROOT);
+set_include_path(get_include_path() . PATH_SEPARATOR . PROJECT_ROOT."jaoss/");
 ini_set("display_errors", 1);
 ini_set("html_errors", "On");
 error_reporting(E_ALL ^ E_STRICT);
