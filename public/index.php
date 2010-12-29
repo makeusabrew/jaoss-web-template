@@ -1,7 +1,10 @@
 <?php
 define("PROJECT_ROOT", realpath(dirname(__FILE__)."/../")."/");
+if (!defined("JAOSS_ROOT")) {
+    define("JAOSS_ROOT", PROJECT_ROOT ."jaoss/");
+}
 set_include_path(get_include_path() . PATH_SEPARATOR . PROJECT_ROOT);
-set_include_path(get_include_path() . PATH_SEPARATOR . PROJECT_ROOT."jaoss/");
+set_include_path(get_include_path() . PATH_SEPARATOR . JAOSS_ROOT);
 ini_set("display_errors", 1);
 ini_set("html_errors", "On");
 error_reporting(E_ALL ^ E_STRICT);
@@ -10,7 +13,7 @@ error_reporting(E_ALL ^ E_STRICT);
 //from config. need to hunt that down
 date_default_timezone_set("Europe/London");
 
-include("library/Smarty-3.0rc4/libs/Smarty.class.php");
+include("library/Smarty/libs/Smarty.class.php");
 include("library/core_exception.php");
 include("library/email.php");
 include("library/file.php");
@@ -47,9 +50,13 @@ try {
 
     $response->echoHeaders();
     $response->echoBody();
-} catch (CoreException $e) {
+} catch (Exception $e) {
     $handler = new ErrorHandler();
-    exit($handler->handleError($e));
+    $handler->handleError($e);
+    $response = $handler->getResponse();
+
+    $response->echoHeaders();
+    $response->echoBody();
 } catch (Exception $e) {
     exit($e->getMessage());
 }
