@@ -14,9 +14,9 @@ right?
 Git doesn't *seem* to provide an easy way of doing this, but the following
 steps will get you there. Any improvements please, let me know:
 
-1. git clone --recursive git://github.com/makeusabrew/jaoss-web-template.git <my_new_project_folder>
+1. git clone --recursive git://github.com/makeusabrew/jaoss-web-template.git **my_new_project_folder**
 2. change into your newly cloned git repo, and then:
-3. rm -rf my_new_project_folder/.git
+3. rm -rf .git/
 3. git init
 4. git add .
 5. git commit -a -m "my initial commit"
