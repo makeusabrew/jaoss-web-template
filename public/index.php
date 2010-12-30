@@ -48,15 +48,15 @@ try {
     $request->dispatch();
     $response = $request->getResponse();
 
-    $response->echoHeaders();
-    $response->echoBody();
+    $response->sendHeaders();
+    echo $response->getBody();
 } catch (Exception $e) {
     $handler = new ErrorHandler();
     $handler->handleError($e);
     $response = $handler->getResponse();
 
-    $response->echoHeaders();
-    $response->echoBody();
+    $response->sendHeaders();
+    echo $response->getBody();
 } catch (Exception $e) {
     exit($e->getMessage());
 }
