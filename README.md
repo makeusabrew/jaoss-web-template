@@ -23,6 +23,6 @@ steps will get you there. Any improvements please, let me know:
 
 The above steps are important - creating the submodule first means you'll get
 the [jaoss library](http://github.com/makeusabrew/jaoss) at the same revision
-number pointed to by the head of the jaoss web template project - if you just
-called git submodule add git://github.com/makeusabrew/jaoss.git jaoss then you'd
+pointed to by the head of the jaoss web template project - if you just called
+**git submodule add git://github.com/makeusabrew/jaoss.git jaoss** then you'd
 get the library at its current head, which may not be quite right.
