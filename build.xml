@@ -18,7 +18,13 @@
     </target>
 
     <target name="test" description="Non Selenium Tests" depends="cleanup">
+        <echo msg="Running Test Suite" />
         <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="phpunit --exclude-group selenium" />
+    </target>
+
+    <target name="test" description="All Tests" depends="cleanup">
+        <echo msg="Running Full Test Suite" />
+        <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="phpunit" />
     </target>
 
     <target name="sloc" description="Generate SLOC">
@@ -27,7 +33,7 @@
     </target>
 
     <target name="build" description="Build (excluding selenium tests)" depends="cleanup,sloc">
-        <echo msg="Running Tests" />
+        <echo msg="Running Tests &amp; Generating Reports" />
         <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="phpunit --log-junit ${reports.dir}/test-results.xml 
         --coverage-html ${reports.dir}/coverage
         --coverage-clover ${reports.dir}/phpunit.coverage.xml
@@ -35,6 +41,7 @@
     </target>
 
     <target name="fullbuild" description="Full Project Build" depends="cleanup,sloc">
+        <echo msg="Cleaning up, Running Tests &amp; Generating Reports" />
         <if>
             <isset property="chmodTmpDirs" />
             <then>
@@ -42,7 +49,6 @@
                 <exec passthru="false" command="chmod -R 0777 tmp/ tests/emails/ log/" />
             </then>
         </if>
-        <echo msg="Running test suite" />
         <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="phpunit --log-junit ${reports.dir}/test-results.xml 
         --coverage-html ${reports.dir}/coverage
         --coverage-clover ${reports.dir}/phpunit.coverage.xml" />
