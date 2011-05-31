@@ -9,6 +9,11 @@ ini_set("display_errors", 1);
 ini_set("html_errors", "On");
 error_reporting(E_ALL ^ E_STRICT);
 
+// convert errors into exceptions
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+
 //@todo this is temporary - some logging happens before we set
 //from config. need to hunt that down
 date_default_timezone_set("Europe/London");
