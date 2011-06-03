@@ -1,6 +1,6 @@
-{capture name="body"}
-    <h1>Jaoss Web Template</h1>
+{extends file="base.tpl"}
+{block name="body"}
+    <h1>{setting value="site.title"}</h1>
 
     <p>Hello world!</p>
-{/capture}
-{include file="base.tpl"}
+{/block}
