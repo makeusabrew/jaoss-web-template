@@ -67,7 +67,8 @@ application tests against):
 If you can't be bothered to set up a VirtualHost, or you really want to
 run your project as a sub folder (say, on a Wordpress installation), then
 you'll have to add the `SetEnv` directive to the root folder's `.htaccess`
-file:
+file. Just make sure you remove it when you deploy to a demo / live environment - the default
+mode if no environment variable is defined is `live`.
 
     # this will only ever kick in if the preferred VirtualHost set up hasn't been followed
     # and the codebase is just being accessed directly in a subfolder. It's here as backup.
