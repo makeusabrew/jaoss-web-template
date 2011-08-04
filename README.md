@@ -1,11 +1,9 @@
-Jaoss Web Template
-==================
+# Jaoss Web Template
 
 A bare-bones project tree required to get a very simple website up and running
 using the [jaoss library](http://github.com/makeusabrew/jaoss).
 
-Getting Started
----------------
+## Getting Started
 
 The chances are you don't really want a versioned checkout of this repository
 but instead want a clean copy of it which you'll create a new git repo with -
@@ -27,8 +25,51 @@ pointed to by the head of the jaoss web template project - if you just called
 **git submodule add git://github.com/makeusabrew/jaoss.git jaoss** then you'd
 get the library at its current head, which may not be quite right.
 
-License
--------
+## Project Configuration
+
+When developing a site you'll want to ensure you're in 'build' mode (which will
+pick up some default debug settings in `settings/build.ini`). There are two ways
+to do this:
+
+### VirtualHost Configuration (The Preferred Way)
+
+This is only the preferred way because it's just more conventional to set up
+a VirtualHost limiting access to only the public folder of the project, and
+you'll most likely do this when deploying the site anyway (unless you're going
+to run it as a sub folder, e.g. http://mydomain.com/cool-jaoss-project/).
+
+`<VirtualHost *:80>
+    ServerName mycoolsite.build
+    SetEnv PROJECT_MODE build
+
+    DocumentRoot /path/to/my/jaoss/project/public
+</VirtualHost>`
+
+While you're at it, set one up for testing too (useful for running unit and
+application tests against):
+
+`<VirtualHost *:80>
+    ServerName mycoolsite.test
+    SetEnv PROJECT_MODE test
+
+    DocumentRoot /path/to/my/jaoss/project/public
+</VirtualHost>`
+
+### .htaccess (less preferable)
+
+If you can't be bothered to set up a VirtualHost, or you really want to
+run your project as a sub folder (say, on a Wordpress installation), then
+you'll have to add the `SetEnv` directive to the root folder's `.htaccess`
+file:
+
+`# this will only ever kick in if the preferred VirtualHost set up hasn't been followed
+# and the codebase is just being accessed directly in a subfolder. It's here as backup.
+RewriteEngine On
+RewriteRule ^(.*)$ public/$1 [L]
+SetEnv PROJECT_MODE build
+`
+
+## License
 
 (The MIT License)
 
