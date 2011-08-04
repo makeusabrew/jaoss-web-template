@@ -38,22 +38,26 @@ a VirtualHost limiting access to only the public folder of the project, and
 you'll most likely do this when deploying the site anyway (unless you're going
 to run it as a sub folder, e.g. http://mydomain.com/cool-jaoss-project/).
 
-`<VirtualHost *:80>
+```
+<VirtualHost *:80>
     ServerName mycoolsite.build
     SetEnv PROJECT_MODE build
 
     DocumentRoot /path/to/my/jaoss/project/public
-</VirtualHost>`
+</VirtualHost>
+```
 
 While you're at it, set one up for testing too (useful for running unit and
 application tests against):
 
-`<VirtualHost *:80>
+```
+<VirtualHost *:80>
     ServerName mycoolsite.test
     SetEnv PROJECT_MODE test
 
     DocumentRoot /path/to/my/jaoss/project/public
-</VirtualHost>`
+</VirtualHost>
+```
 
 ### .htaccess (less preferable)
 
@@ -62,12 +66,13 @@ run your project as a sub folder (say, on a Wordpress installation), then
 you'll have to add the `SetEnv` directive to the root folder's `.htaccess`
 file:
 
-`# this will only ever kick in if the preferred VirtualHost set up hasn't been followed
+```
+# this will only ever kick in if the preferred VirtualHost set up hasn't been followed
 # and the codebase is just being accessed directly in a subfolder. It's here as backup.
 RewriteEngine On
 RewriteRule ^(.*)$ public/$1 [L]
 SetEnv PROJECT_MODE build
-`
+```
 
 ## License
 
