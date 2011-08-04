@@ -43,6 +43,10 @@ to run it as a sub folder, e.g. http://mydomain.com/cool-jaoss-project/):
         SetEnv PROJECT_MODE build
 
         DocumentRoot /path/to/my/jaoss/project/public
+
+        <Directory /var/path/to/my/jaoss/project/public>
+            # any directives you need here, options, directory index etc
+        </Directory>
     </VirtualHost>
 
 While you're at it, set one up for testing too (useful for running unit and
@@ -53,6 +57,9 @@ application tests against):
         SetEnv PROJECT_MODE test
 
         DocumentRoot /path/to/my/jaoss/project/public
+        <Directory /var/path/to/my/jaoss/project/public>
+            # any directives you need here, options, directory index etc
+        </Directory>
     </VirtualHost>
 
 ### .htaccess (less preferable)
