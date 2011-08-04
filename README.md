@@ -75,6 +75,13 @@ file:
     RewriteRule ^(.*)$ public/$1 [L]
     SetEnv PROJECT_MODE build
 
+## Permissions
+
+Your web user will need to be able to write to `log/` and `tmp/` - if you're set up in build
+mode when you first run your project with any luck you *should* get some nice developer friendly
+errors informing you of this fact, but if not then try making those writable and trying again. Once
+these are set up be sure to keep an eye on the logs in the `log` directory.
+
 ## License
 
 (The MIT License)
