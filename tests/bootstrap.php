@@ -29,10 +29,13 @@ include("library/table.php");
 include("library/object.php");
 include("library/app.php");
 include("library/app_manager.php");
+include("library/cookie_jar.php");
 include("library/session.php");
 include("library/utils.php");
+include("library/image.php");
 
-Settings::setMode("test");
+$mode = getenv("PROJECT_MODE") !== false ? getenv("PROJECT_MODE") : "test";
+Settings::setMode($mode);
 
 include("library/boot.php");
 include("library/load_apps.php");
