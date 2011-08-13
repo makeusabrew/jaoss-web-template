@@ -4,6 +4,7 @@
     <property name="project.dir" value="." />
     <property name="tests.dir" value="tests" />
     <property name="reports.dir" value="reports" />
+    <property name="mode" value="test" override="true" />
 
     <target name="cleanup" description="Empty Temporary Dirs">
         <delete>
@@ -19,12 +20,12 @@
 
     <target name="test" description="Non Selenium Tests" depends="cleanup">
         <echo msg="Running Test Suite" />
-        <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="phpunit --exclude-group selenium" />
+        <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="PROJECT_MODE=${mode} phpunit --exclude-group selenium" />
     </target>
 
     <target name="test" description="All Tests" depends="cleanup">
         <echo msg="Running Full Test Suite" />
-        <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="phpunit" />
+        <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="PROJECT_MODE=${mode} phpunit" />
     </target>
 
     <target name="sloc" description="Generate SLOC">
@@ -34,7 +35,7 @@
 
     <target name="build" description="Build (excluding selenium tests)" depends="cleanup,sloc">
         <echo msg="Running Tests &amp; Generating Reports" />
-        <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="phpunit --log-junit ${reports.dir}/test-results.xml 
+        <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="PROJECT_MODE=${mode} phpunit --log-junit ${reports.dir}/test-results.xml 
         --coverage-html ${reports.dir}/coverage
         --coverage-clover ${reports.dir}/phpunit.coverage.xml
         --exclude-group selenium" />
@@ -49,7 +50,7 @@
                 <exec passthru="false" command="chmod -R 0777 tmp/ tests/emails/ log/" />
             </then>
         </if>
-        <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="phpunit --log-junit ${reports.dir}/test-results.xml 
+        <exec dir="${tests.dir}" checkreturn="true" passthru="true" command="PROJECT_MODE=${mode} phpunit --log-junit ${reports.dir}/test-results.xml 
         --coverage-html ${reports.dir}/coverage
         --coverage-clover ${reports.dir}/phpunit.coverage.xml" />
     </target>
