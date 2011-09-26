@@ -55,7 +55,7 @@
         --coverage-clover ${reports.dir}/phpunit.coverage.xml" />
     </target>
 
-    <target name="dist" depends="fullbuild">
+    <target name="dist">
         <echo msg="creating temporary files" />
         <delete dir="/tmp/${env.BUILD_TAG}" />
         <copy todir="/tmp/${env.BUILD_TAG}" overwrite="true" includeemptydirs="true">
@@ -65,6 +65,7 @@
         <delete includeemptydirs="true" verbose="false" failonerror="true">
             <fileset dir="/tmp/${env.BUILD_TAG}">
                 <include name="tmp/templates_c/*.tpl.php" />
+                <include name="log/*.log" />
                 <include name=".git**" />
                 <include name="test**" />
                 <include name="*.xml" />
@@ -81,7 +82,7 @@
             tar -xjf ${env.remote_dir}/${env.BUILD_TAG}.tar.bz2 -C ${env.remote_dir}/${env.BUILD_TAG};
             rm ${env.remote_symlink}; ln -f -s ${env.remote_dir}/${env.BUILD_TAG} ${env.remote_symlink};
             rm -f ${env.remote_dir}/*.tar.bz2;
-            chmod 0777 ${env.remote_symlink}/tmp/ ${env.remote_symlink}/uploads/ ${env.remote_symlink}/log/ -R;'" />
+            chmod 0777 ${env.remote_symlink}/tmp/ ${env.remote_symlink}/log/ -R;'" />
         <echo msg="cleaning up" />
         <exec checkreturn="true" passthru="true" command="rm -f /tmp/${env.BUILD_TAG}.tar.bz2" />
         <echo msg="done" />

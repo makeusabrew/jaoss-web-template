@@ -6,9 +6,7 @@ if (!defined("JAOSS_ROOT")) {
 set_include_path(get_include_path() . PATH_SEPARATOR . PROJECT_ROOT);
 set_include_path(get_include_path() . PATH_SEPARATOR . JAOSS_ROOT);
 ini_set("display_errors", 1);
-error_reporting(E_ALL ^ E_STRICT);
-
-date_default_timezone_set("Europe/London");
+error_reporting(-1);
 
 include("library/Smarty/libs/Smarty.class.php");
 include("library/core_exception.php");
@@ -33,6 +31,7 @@ include("library/cookie_jar.php");
 include("library/session.php");
 include("library/utils.php");
 include("library/image.php");
+include("library/cache.php");
 
 $mode = getenv("PROJECT_MODE") !== false ? getenv("PROJECT_MODE") : "test";
 Settings::setMode($mode);
@@ -40,7 +39,9 @@ Settings::setMode($mode);
 include("library/boot.php");
 include("library/load_apps.php");
 
-date_default_timezone_set(Settings::getValue("site", "timezone"));
+if (($timezone = Settings::getValue("site", "timezone", false)) !== false) {
+    date_default_timezone_set($timezone);
+}
 
 require_once("library/test/phpunit_test_controller.php");
 require_once("library/test/selenium_test_controller.php");
