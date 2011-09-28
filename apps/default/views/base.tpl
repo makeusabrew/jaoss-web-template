@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>{block name='title'}{setting value="site.title"}{/block}</title>
-    {include file='helpers/google_analytics.tpl'}
+    {include file='default/views/helpers/google_analytics.tpl'}
 </head>
 <body>
     {block name="body"}
