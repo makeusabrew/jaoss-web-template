@@ -5,6 +5,8 @@ using the [jaoss library](http://github.com/makeusabrew/jaoss).
 
 ## Getting Started
 
+More comprehensive instructions can be found at: http://jaoss.org
+
 The chances are you don't really want a versioned checkout of this repository
 but instead want a clean copy of it which you'll create a new git repo with -
 right?
@@ -87,7 +89,7 @@ these are set up be sure to keep an eye on the logs in the `log` directory.
 
 (The MIT License)
 
-Copyright (C) 2011 by Nick Payne <nick@kurai.co.uk> 
+Copyright (C) 2011-2012 by Nick Payne <nick@kurai.co.uk> 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
