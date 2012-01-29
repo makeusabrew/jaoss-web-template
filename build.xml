@@ -18,8 +18,7 @@
                 <include name="*.sc" />
             </fileset>
             <fileset dir="${tests.dir}/${reports.dir}/${coverage.dir}">
-                <include name="*.html" />
-                <include name="*.xml" />
+                <include name="*.*" />
             </fileset>
         </delete>
     </target>
