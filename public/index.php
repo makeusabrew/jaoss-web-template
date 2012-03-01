@@ -42,34 +42,44 @@ include("library/session.php");
 include("library/utils.php");
 include("library/image.php");
 include("library/cache.php");
+include("library/statsd.php");
 
 $mode = getenv("PROJECT_MODE") !== false ? getenv("PROJECT_MODE") : "live";
+
+session_cache_limiter(false);
 
 try {
     // make sure a request object is available as soon as possible
     $request = JaossRequest::getInstance();
 
     Settings::setMode($mode);
+
     include("library/boot.php");
     include("library/load_apps.php");
 
-    if (($timezone = Settings::getValue("site", "timezone", false)) !== false) {
-        date_default_timezone_set($timezone);
+    if (Settings::getValue("date", "allow_from_cookie", false) ) {
+        $date = CookieJar::getInstance()->getCookie("test_date");
+        if ($date !== null) {
+            Utils::setCurrentDate($date);
+        }
     }
 
     $request->dispatch();
     $response = $request->getResponse();
 
-    $response->sendHeaders();
-    echo $response->getBody();
+    $response->setIfNoneMatch(
+        $request->getHeader('If-None-Match')
+    );
+
+    $response->send();
+
 } catch (Exception $e) {
     $handler = new ErrorHandler();
     $handler->setRequest($request);
     $handler->handleError($e);
     $response = $handler->getResponse();
 
-    $response->sendHeaders();
-    echo $response->getBody();
+    $response->send();
 } catch (Exception $e) {
     exit($e->getMessage());
 }
