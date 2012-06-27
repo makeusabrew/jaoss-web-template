@@ -19,7 +19,8 @@ function handleErrors($errno, $errstr, $errfile, $errline) {
 set_error_handler("handleErrors");
 
 include("library/Smarty/libs/Smarty.class.php");
-include("library/core_exception.php");
+include("library/exception/core.php");
+include("library/exception/init.php");
 include("library/email.php");
 include("library/file.php");
 include("library/validate.php");
@@ -46,7 +47,7 @@ include("library/statsd.php");
 
 $mode = getenv("PROJECT_MODE") !== false ? getenv("PROJECT_MODE") : "live";
 
-session_cache_limiter(false);
+//session_cache_limiter(false);
 
 try {
     // make sure a request object is available as soon as possible
@@ -67,9 +68,11 @@ try {
     $request->dispatch();
     $response = $request->getResponse();
 
+    /*
     $response->setIfNoneMatch(
         $request->getHeader('If-None-Match')
     );
+    */
 
     $response->send();
 

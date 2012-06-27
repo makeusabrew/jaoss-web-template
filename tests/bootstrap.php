@@ -17,7 +17,8 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
 });
 
 include("library/Smarty/libs/Smarty.class.php");
-include("library/core_exception.php");
+include("library/exception/core.php");
+include("library/exception/init.php");
 include("library/email.php");
 include("library/file.php");
 include("library/validate.php");
@@ -53,5 +54,4 @@ if (($timezone = Settings::getValue("site", "timezone", false)) !== false) {
 }
 
 require_once("library/test/phpunit_test_controller.php");
-require_once("library/test/selenium_test_controller.php");
 require_once("library/test/test_request.php");
