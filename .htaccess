@@ -2,3 +2,5 @@
 # and the codebase is just being accessed directly in a subfolder. It's here as backup.
 RewriteEngine On
 RewriteRule ^(.*)$ public/$1 [L]
+# if we are using non vhost, assume localhost is build mode
+SetEnvIf Host localhost PROJECT_MODE=build
