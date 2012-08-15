@@ -1,7 +1,11 @@
 php_flag magic_quotes_gpc Off
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule .* index.php [L]
 # uncomment the below to route all requests via the profiling mechanism
 # be sure to comment out the rewrite rule above too!
 #RewriteRule .* profile.php [L]
+
+# prevent directories in public/ interfering with routes by adding slashes on the end
+DirectorySlash Off
