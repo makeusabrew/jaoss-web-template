@@ -1,7 +1,10 @@
 var child_process = require("child_process"),
-    Settings      = require("./settings");
+    Settings      = require("./settings"),
+    Zombie        = require("zombie");
 
 Settings.setModeAndLoad(process.env.PROJECT_MODE || "test");
+
+Zombie.site = Settings.getValue("site", "base_href");
 
 module.exports = {
     loadFixture: function(fixture, cb) {
@@ -18,6 +21,12 @@ module.exports = {
     },
 
     Settings: Settings,
+
+    Zombie: Zombie,
+
+    base_href: Zombie.site,
+
+    host: Zombie.site.match(/^https?:\/\/(.+)\/$/)[1],
 
     authIfNecessary: function(browser) {
         if (Settings.getValue("site", "basic_auth")) {

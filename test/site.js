@@ -1,7 +1,6 @@
-var boot   = require("./lib/boot");
-var Zombie = require("zombie");
-var assert = require("assert");
-Zombie.site = boot.Settings.getValue("site", "base_href");
+var boot   = require("./lib/boot"),
+    assert = require("assert"),
+    Zombie = boot.Zombie;
 
 describe("Basic site tests", function() {
     describe("When viewing the home page", function() {
