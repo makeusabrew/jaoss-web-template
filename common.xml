@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<project name="Jaoss Web Template - Common tasks" default="null">
+    <target name="common-release">
+        <if>
+            <equals arg1="1" arg2="${tmp_exists}" />
+            <then>
+                <echo msg="Temporary files already exist, not creating directory..." />
+            </then>
+            <else>
+                <echo msg="Creating temporary files" />
+                <delete dir="/tmp/${release_tag}" />
+                <copy todir="/tmp/${release_tag}" overwrite="true" includeemptydirs="true">
+                    <fileset dir="." defaultexcludes="false" />
+                </copy>
+            </else>
+        </if>
+
+        <echo msg="Removing build data" />
+        <delete includeemptydirs="true" verbose="false" failonerror="true">
+            <fileset dir="/tmp/${release_tag}" defaultexcludes="false">
+                <include name="_conf**" />
+                <include name="src**" />
+                <include name="tmp/templates_c/*.tpl.php" />
+                <!-- @todo write phing task to check log dir, ala uploads -->
+                <include name="log/*.log" />
+                <include name="jtail" />
+                <include name="test**" />
+                <include name="node_modules**" />
+                <include name="jaoss/tests**" />
+                <include name="jaoss/tools/jtail**" />
+                <include name="jaoss/.git**" />
+                <include name="jaoss/README*" />
+                <include name="*.xml" />
+                <include name="*.jar" />
+                <include name="*.sql" />
+                <include name="README*" />
+                <include name="public/uploads**" />
+            </fileset>
+        </delete>
+
+        <echo msg="Cleaning up index" />
+        <exec checkreturn="true" passthru="true" command="cd /tmp/${release_tag}; git clean -x -d -f;" />
+
+        <echo msg="Deleting git index" />
+        <delete includeemptydirs="true" verbose="false" failonerror="true">
+            <fileset dir="/tmp/${release_tag}" defaultexcludes="false">
+                <include name=".git**" />
+            </fileset>
+        </delete>
+
+        <echo msg="Compressing archive" />
+        <tar destfile="/tmp/${release_tag}.tar.bz2" basedir="/tmp/${release_tag}" compression="bzip2" />
+    </target>
+
+    <target name="common-migrate">
+        <exec logoutput="true" checkreturn="true" command="./jcli database migrate --no-colour" />
+    </target>
+</project>

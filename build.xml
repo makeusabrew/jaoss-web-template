@@ -81,44 +81,115 @@
         <exec checkreturn="true" passthru="true" command="PROJECT_MODE=${mode} /usr/local/bin/mocha --reporter xunit > ${reportsFull.dir}/mocha-test-results.xml" />
     </target>
 
-    <target name="dist">
-        <echo msg="creating temporary files" />
-        <delete dir="/tmp/${env.BUILD_TAG}" />
-        <copy todir="/tmp/${env.BUILD_TAG}" overwrite="true" includeemptydirs="true">
-            <fileset dir="." />
-        </copy>
-        <echo msg="removing build data" />
-        <delete includeemptydirs="true" verbose="false" failonerror="true">
-            <fileset dir="/tmp/${env.BUILD_TAG}">
-                <include name="_conf**" />
-                <include name="src**" />
-                <include name="tmp/templates_c/*.tpl.php" />
-                <include name="log/*.log" />
-                <include name=".git**" />
-                <include name="jcli" />
-                <include name="test**" />
-                <include name="jaoss/tests**" />
-                <include name="jaoss/tools**" />
-                <include name="jaoss/.git**" />
-                <include name="jaoss/README*" />
-                <include name="*.xml" />
-                <include name="README*" />
-            </fileset>
-        </delete>
-        <echo msg="compressing archive" />
-        <tar destfile="/tmp/${env.BUILD_TAG}.tar.bz2" basedir="/tmp/${env.BUILD_TAG}" compression="bzip2" />
-        <echo msg="copying to remote host" />
-        <exec checkreturn="true" passthru="true" command="scp /tmp/${env.BUILD_TAG}.tar.bz2 ${env.remote_user}@${env.remote_host}:${env.remote_dir}" />
-        <echo msg="setting up remote project" />
-        <exec checkreturn="true" passthru="true" command="ssh ${env.remote_user}@${env.remote_host}
-            'mkdir ${env.remote_dir}/${env.BUILD_TAG};
-            tar -xjf ${env.remote_dir}/${env.BUILD_TAG}.tar.bz2 -C ${env.remote_dir}/${env.BUILD_TAG};
-            chgrp ${env.remote_group} ${env.remote_dir}/${env.BUILD_TAG} -R;
-            chmod 0775 ${env.remote_dir}/${env.BUILD_TAG}/tmp/ ${env.remote_dir}/${env.BUILD_TAG}/log/ -R;
-            rm ${env.remote_symlink}; ln -f -s ${env.remote_dir}/${env.BUILD_TAG} ${env.remote_symlink};
-            rm -f ${env.remote_dir}/*.tar.bz2;'" />
-        <echo msg="cleaning up" />
-        <exec checkreturn="true" passthru="true" command="rm -f /tmp/${env.BUILD_TAG}.tar.bz2" />
-        <echo msg="done" />
+    <property name="tmp_exists" value="0" />
+
+    <target name="uploads">
+        <echo msg="Testing existence of remote uploads folder..." />
+        <exec command="ssh ${remote_user}@${remote_host} 'test -d ${remote_dir}/uploads'" returnProperty="remote.uploads" />
+        <if>
+            <!-- rememeber, in bash land, non-zero exit is a failure -->
+            <equals arg1="1" arg2="${remote.uploads}" />
+            <then>
+                <property name="tmp_exists" value="1" override="true" />
+
+                <exec command="git tag | grep 'test-release-' | cut -d '-' -f 3 | sort -n -r | head -n 1" outputProperty="release_tag" />
+                <property name="release_tag" value="test-release-${release_tag}" override="true" />
+
+                <echo msg="Uploads directory does not exist. Syncing..." />
+                <delete dir="/tmp/${release_tag}" />
+                <copy todir="/tmp/${release_tag}" includeemptydirs="true">
+                    <fileset dir="." defaultexcludes="false" />
+                </copy>
+                <echo msg="Cleaning up index" />
+                <exec checkreturn="true" passthru="true" command="cd /tmp/${release_tag}; git clean -x -d -f public/uploads;" />
+                <echo msg="Compressing uploads" />
+                <tar destfile="/tmp/${release_tag}.tar.bz2" basedir="/tmp/${release_tag}/public/uploads" compression="bzip2" />
+                <echo msg="Copying to remote host" />
+                <exec checkreturn="true" passthru="true" command="scp /tmp/${release_tag}.tar.bz2 ${remote_user}@${remote_host}:${remote_dir}" />
+                <echo msg="Setting up uploads directory" />
+                <exec checkreturn="true" passthru="true" command="ssh ${remote_user}@${remote_host}
+                    'mkdir ${remote_dir}/uploads;
+                    tar -xjf ${remote_dir}/${release_tag}.tar.bz2 -C ${remote_dir}/uploads;
+                    chgrp ${remote_group} ${remote_dir}/uploads -R;
+                    chmod 0775 ${remote_dir}/uploads -R;
+                    rm -f ${remote_dir}/${release_tag}.tar.bz2;'" />
+                <echo msg="Uploads synced successfully" />
+                <echo msg="Cleaning up" />
+                <exec checkreturn="true" passthru="true" command="rm -f /tmp/${release_tag}.tar.bz2" />
+                <echo msg="Done!" />
+            </then>
+            <else>
+                <echo msg="uploads directory exists, nothing to sync" />
+            </else>
+        </if>
+    </target>
+
+    <target name="migratedb">
+        <phing phingfile="common.xml" target="common-migrate" />
+    </target>
+
+    <target name="dist" depends="uploads">
+        <echo msg="Fetching release tag" />
+        <exec command="git tag | grep 'test-release-' | cut -d '-' -f 3 | sort -n -r | head -n 1" outputProperty="release_tag" />
+        <property name="release_tag" value="test-release-${release_tag}" override="true" />
+        <echo msg="Release tag is ${release_tag}${line.separator}" />
+
+        <phing phingfile="common.xml" target="common-release" />
+
+        <echo msg="Copying to remote host" />
+        <exec checkreturn="true" passthru="true" command="scp /tmp/${release_tag}.tar.bz2 ${remote_user}@${remote_host}:${remote_dir}" />
+
+        <echo msg="Setting up remote project" />
+        <exec checkreturn="true" passthru="true" command="ssh ${remote_user}@${remote_host}
+            'mkdir ${remote_dir}/${release_tag};
+            tar -xjf ${remote_dir}/${release_tag}.tar.bz2 -C ${remote_dir}/${release_tag};
+            chgrp ${remote_group} ${remote_dir}/${release_tag} -R;
+            chmod 0775 ${remote_dir}/${release_tag}/tmp/ ${remote_dir}/${release_tag}/log/ -R;
+            ln -s ${remote_dir}/uploads ${remote_dir}/${release_tag}/public/uploads;'" />
+
+        <echo msg="Switching symlink" />
+        <exec checkreturn="true" command="ssh ${remote_user}@${remote_host}
+            'ln -s ${remote_dir}/${release_tag} ${remote_symlink}_tmp &amp;&amp; mv -Tf ${remote_symlink}_tmp ${remote_symlink};'" />
+
+        <echo msg="Cleaning up" />
+        <exec checkreturn="true" command="ssh ${remote_user}@${remote_host}
+            'rm -rf ${remote_dir}/*.tar.bz2'" />
+        <exec checkreturn="true" passthru="true" command="rm -f /tmp/${release_tag}.tar.bz2" />
+
+        <echo msg="Done!" />
+    </target>
+
+    <target name="pre-release">
+        <exec command="git fetch --tags" />
+
+        <exec command="git tag | grep 'test-release-' | cut -d '-' -f 3 | sort -n -r | head -n 1" outputProperty="lastRelease" />
+        <exec command="echo ${lastRelease} | awk '{ print $1 + 1 }'" outputProperty="nextRelease" />
+
+        <echo msg="" />
+        <echo msg="Next release will be test-release-${nextRelease}" />
+        <echo msg="" />
+
+        <exec command='git log test-release-${lastRelease}..HEAD --no-merges --pretty=format:"%an, %ad - %s (%h)" --date=local' outputProperty="releaseChanges" />
+        <if>
+            <equals arg1="" arg2="${releaseChanges}" />
+            <then>
+                <echo msg="${line.separator}${line.separator}WARNING: No differences detected between release versions. Is this correct?${line.separator}" />
+            </then>
+            <else>
+                <echo msg="${line.separator}${line.separator}${releaseChanges}${line.separator}" />
+            </else>
+        </if>
+    </target>
+
+    <target name="prepare-release">
+        <exec command="git tag | grep 'test-release-' | cut -d '-' -f 3 | sort -n -r | head -n 1" outputProperty="lastRelease" />
+        <exec command="echo ${lastRelease} | awk '{ print $1 + 1 }'" outputProperty="nextRelease" />
+        <exec command="git tag test-release-${nextRelease}" />
+
+        <echo msg="" />
+        <echo msg="Release tagged as test-release-${nextRelease}" />
+        <echo msg="" />
+
+        <exec command="git push --tags" />
     </target>
 </project>
