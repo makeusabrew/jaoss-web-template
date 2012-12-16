@@ -1,6 +1,10 @@
 php_flag magic_quotes_gpc Off
 
 RewriteEngine On
+
+# catch URLs ending with a slash - if desired
+#RewriteRule ^(.+)/$ http://%{HTTP_HOST}/$1 [R=301,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule .* index.php [L]
 # uncomment the below to route all requests via the profiling mechanism
