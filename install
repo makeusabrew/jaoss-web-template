@@ -10,4 +10,6 @@ git add jaoss       && \
 git add .gitmodules && \
 rm $0
 
-echo "Submodule installed - please commit shortly"
+echo "Submodule installed"
+
+git status
