@@ -9,11 +9,19 @@ More comprehensive instructions can be found at: http://jaoss.org
 
 The chances are you don't really want a versioned checkout of this repository
 but instead want a clean copy of it which you'll create a new git repo with.
-Git doesn't *seem* to provide an easy way of doing this, but the following
-steps will get you there. Any improvements please, let me know.
+Things are made a little more complicated by the fact you'll want the [jaoss](http://github.com/makeusabrew/jaoss)
+submodule installed at the latest stable commit ref pointed to by
+the web template which may well not just be the current HEAD of jaoss's
+master branch. Git doesn't *seem*
+to provide an easy way of doing this, but the following steps will
+get you there. Any improvements please, let me know.
 
-The process varies slightly depending on your installed version of git
-which is most likely > 1.7.0 but you can double check with ```git --version```
+The process varies depending on your installed version of git -
+this is most likely 1.7.0 or later, but can be verified by
+running: ```git --version```
+
+Whichever install process you use, you *must* clone the web template with
+```---recursive``` in order to set the submodule up correctly.
 
 ### Git >= 1.7.0
 
@@ -29,12 +37,6 @@ which is most likely > 1.7.0 but you can double check with ```git --version```
 3. git init
 4. git add .
 5. git commit -a -m "my initial commit"
-
-The above steps are important - creating the submodule first means you'll get
-the [jaoss library](http://github.com/makeusabrew/jaoss) at the same revision
-pointed to by the head of the jaoss web template project - if you just called
-**git submodule add git://github.com/makeusabrew/jaoss.git jaoss** then you'd
-get the library at its current head, which may not be quite right.
 
 ## Project Configuration
 
