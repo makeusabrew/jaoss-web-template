@@ -2,12 +2,12 @@
 
 echo "Installing clean submodule"
 
-mv .git/modules . && \
-rm -rf .git/      && \
-git init          && \
-mv modules .git/  && \
-git add jaoss     && \
-git add .gitmodules
+mv .git/modules .   && \
+rm -rf .git/        && \
+git init            && \
+mv modules .git/    && \
+git add jaoss       && \
+git add .gitmodules && \
+rm $0
 
 echo "Submodule installed - please commit shortly"
-rm $0
