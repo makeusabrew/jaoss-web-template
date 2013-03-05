@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+echo "Installing clean submodule"
+
+mv .git/modules . && \
+rm -rf .git/      && \
+git init          && \
+mv modules .git/  && \
+git add jaoss     && \
+git add .gitmodules
+
+echo "Submodule installed - please commit shortly"
+rm $0

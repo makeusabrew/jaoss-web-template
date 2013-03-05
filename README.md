@@ -8,11 +8,20 @@ using the [jaoss library](http://github.com/makeusabrew/jaoss).
 More comprehensive instructions can be found at: http://jaoss.org
 
 The chances are you don't really want a versioned checkout of this repository
-but instead want a clean copy of it which you'll create a new git repo with -
-right?
-
+but instead want a clean copy of it which you'll create a new git repo with.
 Git doesn't *seem* to provide an easy way of doing this, but the following
-steps will get you there. Any improvements please, let me know:
+steps will get you there. Any improvements please, let me know.
+
+The process varies slightly depending on your installed version of git
+which is most likely > 1.7.0 but you can double check with ```git --version```
+
+### Git >= 1.7.0
+
+1. git clone --recursive git://github.com/makeusabrew/jaoss-web-template.git **my_new_project_folder**
+2. cd **my_new_project_folder**
+3. ./install
+
+### Git < 1.7.0
 
 1. git clone --recursive git://github.com/makeusabrew/jaoss-web-template.git **my_new_project_folder**
 2. change into your newly cloned git repo, and then:
