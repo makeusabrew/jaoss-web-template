@@ -21,7 +21,7 @@ this is most likely 1.7.0 or later, but can be verified by
 running: ```git --version```
 
 Whichever install process you use, you *must* clone the web template with
-```---recursive``` in order to set the submodule up correctly.
+```--recursive``` in order to set the submodule up correctly.
 
 ### Git >= 1.7.0
 
