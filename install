@@ -7,11 +7,11 @@ rm -rf .git/        && \
 git init            && \
 mv modules .git/    && \
 git add jaoss       && \
-git add .           && \
-rm $0
+rm $0               && \
+git add .
 
 echo "Submodule installed"
 
 git status
 
-echo "Please perform a commit now; e.g. git commit -m 'initial commit'"
+echo "\x1b[1mPlease perform a commit now; e.g. git commit -m 'initial commit'\x1b[0m"
