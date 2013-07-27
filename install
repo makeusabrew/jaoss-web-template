@@ -14,4 +14,4 @@ echo "Submodule installed"
 
 git status
 
-echo "\x1b[1mPlease perform a commit now; e.g. git commit -m 'initial commit'\x1b[0m"
+echo -e "\n\x1b[1mPlease perform a commit now; e.g. git commit -m 'initial commit'\x1b[0m"
